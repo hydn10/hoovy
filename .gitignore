@@ -1,0 +1,12 @@
+CMakeUserPresets.json
+
+/out*/
+
+**/compile_commands.json
+**/.clangd
+**/.ccls
+
+.vs/
+.vscode/
+
+**/result
