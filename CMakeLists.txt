@@ -2,4 +2,4 @@
 
 project ("hoovy" LANGUAGES CXX VERSION 0.1)
 
-add_subdirectory ("hoovy")
+add_subdirectory (sources)
