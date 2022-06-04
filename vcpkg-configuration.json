@@ -1,0 +1,10 @@
+{
+  "registries": [
+    {
+      "kind": "git",
+      "repository": "https://github.com/hydn10/vcpkg-registry",
+      "packages": [ "htracer" ],
+      "baseline": "2c60fe351bf5063433ad400fdb1d83db33f70171"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 ﻿#include <hff/writer.hpp>
 
+#include <htracer/scene/scene.hpp>
+
 #include <iostream>
 
 
@@ -20,6 +22,8 @@ try
         argv[0]);
     return 1;
   }
+
+  htracer::scene::scene<double> scene;
 
   auto writer = hff::writer(argv[1], 1920, 1080, 60, 8000000, 12, hff::pixel_format::YUV444P);
 

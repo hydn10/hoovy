@@ -3,6 +3,7 @@
   "name": "hoovy",
   "version": "0.1.0",
   "dependencies": [
+    "htracer",
     {
       "name": "ffmpeg",
       "default-features": false,
