@@ -48,14 +48,14 @@ struct raii_for_args
     Free(ptr);
   }
 
-  // TODO: I'm unsure if using std::forward is necessary.
-  //       In this context I think std::forward does nothing since i use
-  //       `Args` and not `Args&&`.
-  //       On the other hand std::move'ing everything should work and I can't think
-  //       of any drawback.
-  //       That said, since `Create` functions always reference a C API function,
-  //       they will always have simple types as parameters (no refs or benefits from moving)
-  //       so I will opt to just not use std::move.
+  // I'm unsure if using std::forward is necessary.
+  // In this context I think std::forward does nothing since i use
+  // `Args` and not `Args&&`.
+  // On the other hand std::move'ing everything should work and I can't think
+  // of any drawback.
+  // That said, since `Create` functions always reference a C API function,
+  // they will always have simple types as parameters (no refs or benefits from moving)
+  // so I will opt to just not use std::move.
   template<T *(*Create)(Args...), void (*Free)(T **)>
   class type
   {
