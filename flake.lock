@@ -1,0 +1,58 @@
+{
+  "nodes": {
+    "hydn-pkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1654724702,
+        "narHash": "sha256-qoLw8fzbGDnwcUREDLGmND4uLk4XM8koqn7A7q6XbsU=",
+        "owner": "hydn10",
+        "repo": "htracer",
+        "rev": "7a3a6c98255fdf419d94a5479dd19b27b810e905",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hydn10",
+        "repo": "htracer",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1654665288,
+        "narHash": "sha256-7blJpfoZEu7GKb84uh3io/5eSJNdaagXD9d15P9iQMs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "43ecbe7840d155fa933ee8a500fb00dbbc651fc8",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1654665288,
+        "narHash": "sha256-7blJpfoZEu7GKb84uh3io/5eSJNdaagXD9d15P9iQMs=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "43ecbe7840d155fa933ee8a500fb00dbbc651fc8",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "hydn-pkgs": "hydn-pkgs",
+        "nixpkgs": "nixpkgs_2"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

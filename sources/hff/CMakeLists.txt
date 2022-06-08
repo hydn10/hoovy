@@ -8,9 +8,14 @@ add_library(${target}
   "src/writer.cpp"
   "src/writers/rgb24.cpp")
 
-target_include_directories(${target} PUBLIC ./include)
+target_include_directories(${target} PUBLIC include)
 target_compile_features (${target} PUBLIC cxx_std_17)
 
-find_package(FFMPEG COMPONENTS AVCODEC AVFORMAT AVUTIL AVDEVICE REQUIRED)
-target_include_directories(${target} PRIVATE ${FFMPEG_INCLUDE_DIRS})
-target_link_libraries(${target} PRIVATE ${FFMPEG_LIBRARIES})
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBAV REQUIRED IMPORTED_TARGET
+  libavformat
+  libavcodec
+  libswscale
+  libavutil)
+
+target_link_libraries(${target} PkgConfig::LIBAV)

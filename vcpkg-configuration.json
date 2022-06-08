@@ -3,8 +3,10 @@
     {
       "kind": "git",
       "repository": "https://github.com/hydn10/vcpkg-registry",
-      "packages": [ "htracer" ],
-      "baseline": "d02836406c9da33ee74c97528ca3a294c6e622a2"
+      "packages": [
+        "htracer"
+      ],
+      "baseline": "feb8c1019227789328227e7e5a3d24461ba44d93"
     }
   ]
 }
