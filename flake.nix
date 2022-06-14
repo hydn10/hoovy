@@ -3,36 +3,32 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs";
-    hydn-pkgs.url = "github:hydn10/htracer";
+    htracer.url = "github:hydn10/htracer";
   };
 
-  outputs = { self, nixpkgs, hydn-pkgs }:
+  outputs = { self, nixpkgs, htracer }:
     let
       pkgs-lin64 = import nixpkgs {
         system = "x86_64-linux";
-        overlays = [ hydn-pkgs.overlay ];
+        overlays = [ htracer.overlays.default ];
       };
 
       hoovyDrv-lin64 = pkgs-lin64.callPackage ./default.nix {};
     in
     {
-      apps.x86_64-linux.ray = 
+      apps.x86_64-linux.hoovy = 
       {
         type = "app";
-        program = "${self.x86_64-linux.packages.hoovy}/bin/ray";
+        program = "${self.packages.x86_64-linux.hoovy}/bin/hoovy";
       };
 
-      # From nix >= 2.7 this should be 'packages.<system>.default'
-      defaultApp.x86_64-linux = self.apps.x86_64-linux.hoovy;
+      apps.x86_64-linux.default = self.apps.x86_64-linux.hoovy;
 
-      overlay = final: prev: { hoovy = self.packages.x86_64-linux.hoovy; };
+      overlays.default = final: prev: { hoovy = self.packages.x86_64-linux.hoovy; };
 
       packages.x86_64-linux.hoovy = hoovyDrv-lin64;
+      packages.x86_64-linux.default = self.packages.x86_64-linux.hoovy;
 
-      # From nix >= 2.7 this should be 'packages.<system>.default'
-      defaultPackage.x86_64-linux = self.packages.x86_64-linux.hoovy;
-
-      # From nix >= 2.7, this should be 'devShells.<system>.default'
-      devShell.x86_64-linux = import ./shell.nix { pkgs = pkgs-lin64; };
+      devShells.x86_64-linux.default = import ./shell.nix { pkgs = pkgs-lin64; };
     };
 }
