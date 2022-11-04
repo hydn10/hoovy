@@ -1,8 +1,10 @@
 { lib, stdenv, htracer, ffmpeg, cmake, pkg-config }:
 
 let
-  pname = "hoovy";
-  version = "0.1.0";
+  vcpkgFile = builtins.fromJSON (builtins.readFile ./vcpkg.json);
+
+  pname = vcpkgFile.name;
+  version = vcpkgFile.version;
 in
   stdenv.mkDerivation
   {
