@@ -13,4 +13,18 @@ target_link_libraries(${target} PRIVATE hff)
 find_package(htracer CONFIG REQUIRED)
 target_link_libraries(${target} PRIVATE htracer)
 
-install(TARGETS ${target})
+
+install(
+  TARGETS ${target}
+  RUNTIME_DEPENDENCY_SET ${target}_RUNTIME_DEPS
+)
+
+# See [1].
+# https://github.com/microsoft/vcpkg/issues/13797
+if (WIN32)
+  install(
+    RUNTIME_DEPENDENCY_SET ${target}_RUNTIME_DEPS
+      PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
+      POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
+  )
+endif()

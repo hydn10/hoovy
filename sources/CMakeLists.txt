@@ -1,7 +1,7 @@
-if (MSVC)
-    add_compile_options(/W4)
+if(MSVC)
+  add_compile_options(/W4)
 else()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+  add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
 add_subdirectory(apps)
