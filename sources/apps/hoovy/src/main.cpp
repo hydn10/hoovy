@@ -72,7 +72,7 @@ try
 
             for (int x = 0; x < width; ++x)
             {
-              auto const &pixel = image.pixels()[y * width + x].to_srgb();
+              auto pixel = image.pixels()[y * width + x].to_srgb();
               (void)time_index;
 
               r_col[x] = to_pixel_value(pixel.r());
