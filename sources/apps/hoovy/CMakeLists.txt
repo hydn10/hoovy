@@ -10,8 +10,8 @@ target_compile_features(${target} PRIVATE cxx_std_20)
 
 target_link_libraries(${target} PRIVATE hff)
 
-find_package(htracer CONFIG REQUIRED)
-target_link_libraries(${target} PRIVATE htracer)
+find_package(HTracer CONFIG REQUIRED)
+target_link_libraries(${target} PRIVATE HTracer::HTracer)
 
 
 install(
