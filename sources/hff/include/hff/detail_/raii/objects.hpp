@@ -10,7 +10,6 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-
 #include <hff/detail_/raii/raii_for_args.hpp>
 
 
@@ -20,7 +19,7 @@ namespace hff::detail_::raii
 namespace abbr
 {
 
-using av_format_context = raii_for_args<AVFormatContext, AVOutputFormat *, char const *, char const *>;
+using av_format_context = raii_for_args<AVFormatContext, AVOutputFormat const *, char const *, char const *>;
 
 using avio = raii_for_args<AVIOContext, char const *, int>;
 

@@ -18,15 +18,12 @@ namespace hff
 class stream_info
 {
   AVStream *stream_;
-  AVCodec *codec_;
+  AVCodec const *codec_;
   detail_::raii::av_codec_context codec_context_;
   detail_::raii::av_packet packet_;
 
 public:
-  stream_info(
-      AVStream *stream,
-      AVCodec *codec,
-      detail_::raii::av_codec_context &&codec_context);
+  stream_info(AVStream *stream, AVCodec const *codec, detail_::raii::av_codec_context &&codec_context);
 
   frame_info
   create_frames();

@@ -18,7 +18,9 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
 
   int ret = avcodec_send_frame(&cc, frame);
   if (ret < 0)
+  {
     throw std::runtime_error("Error sending a frame to the encoder: "s + av_err2str(ret));
+  }
 
   auto &pkt = sti.get_packet();
 
@@ -26,12 +28,16 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
   {
     ret = avcodec_receive_packet(&cc, &pkt);
     if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+    {
       break;
+    }
 
     else if (ret < 0)
+    {
       throw std::runtime_error("Error encoding a frame: "s + av_err2str(ret));
+    }
 
-    auto &st = sti.get_stream();
+    auto st = sti.get_stream();
 
     // Rescale output packet timestamp values from codec to stream timebase
     av_packet_rescale_ts(&pkt, cc.time_base, st.time_base);
@@ -42,7 +48,9 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
     // its contents and resets pkt), so that no unreferencing is necessary.
     // This would be different if one used av_write_frame().
     if (ret < 0)
+    {
       throw std::runtime_error("Error while writing output packet: "s + av_err2str(ret));
+    }
   }
 
   return ret != AVERROR_EOF;
@@ -79,7 +87,9 @@ writer::write_header()
 {
   int ret = avformat_write_header(&format_.oc(), nullptr);
   if (ret < 0)
+  {
     throw std::runtime_error("Error occurred when writing header.");
+  }
 }
 
 
@@ -93,7 +103,9 @@ writer::write_trailer()
 
   int ret = av_write_trailer(&format_.oc());
   if (ret < 0)
+  {
     throw std::runtime_error("Error ocurred when writing trailer.");
+  }
 }
 
 } // namespace hff

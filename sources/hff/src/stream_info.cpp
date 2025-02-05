@@ -6,7 +6,7 @@
 namespace hff
 {
 
-stream_info::stream_info(AVStream *stream, AVCodec *codec, detail_::raii::av_codec_context &&codec_context)
+stream_info::stream_info(AVStream *stream, AVCodec const *codec, detail_::raii::av_codec_context &&codec_context)
     : stream_{stream}
     , codec_{codec}
     , codec_context_{std::move(codec_context)}
@@ -20,12 +20,16 @@ stream_info::create_frames()
   // Open the codec.
   int ret = avcodec_open2(&codec_context_.get(), codec_, nullptr);
   if (ret < 0)
+  {
     throw std::runtime_error("Could not open video codec.");
+  }
 
   // Copy the stream parameters to the muxer.
   ret = avcodec_parameters_from_context(stream_->codecpar, &codec_context_.get());
   if (ret < 0)
+  {
     throw std::runtime_error("Could not copy the stream parameters.");
+  }
 
   // Allocate the frames.
   return frame_info(codec_context_.get().width, codec_context_.get().height, codec_context_.get().pix_fmt);

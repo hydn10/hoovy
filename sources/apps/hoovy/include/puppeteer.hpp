@@ -2,13 +2,13 @@
 #define HOOVY_PUPPETEER_HPP
 
 
-#include <htracer/raytracing/image.hpp>
+#include <htracer/rendering/image.hpp>
 
 
 namespace hoovy
 {
 
-htracer::raytracing::image<double>
+htracer::rendering::image<double>
 get_image(uint32_t width, uint32_t height, double lam);
 
 } // namespace hoovy

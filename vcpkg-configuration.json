@@ -1,4 +1,9 @@
 {
+  "default-registry": {
+    "kind": "git",
+    "baseline": "0ca64b4e1c70fa6d9f53b369b8f3f0843797c20c",
+    "repository": "https://github.com/microsoft/vcpkg"
+  },
   "registries": [
     {
       "kind": "git",
@@ -6,7 +11,7 @@
       "packages": [
         "htracer"
       ],
-      "baseline": "a7c5bbe4d6f8e27fa43b45f752a7b5946fe74e66"
+      "baseline": "0886d14a2a903579ff42bbaadcd7471f299d3eec"
     }
   ]
 }

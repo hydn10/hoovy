@@ -22,13 +22,15 @@ struct raii_for_args
 {
   template<int (*Create)(T **, Args...)>
   static inline T *
-  to_p_ret_create(Args ...args)
+  to_p_ret_create(Args... args)
   {
     T *pp = nullptr;
 
     int res = Create(&pp, std::forward<Args>(args)...);
     if (res < 0)
+    {
       return nullptr;
+    }
 
     return pp;
   }
@@ -66,7 +68,7 @@ struct raii_for_args
 
   public:
     type(empty_tag);
-    type(Args ...args);
+    type(Args... args);
     ~type();
 
     type(type const &rhs) = delete;
@@ -108,7 +110,9 @@ raii_for_args<T, Args...>::type<Create, Free>::type(Args... args)
     : object_{Create(args...)}
 {
   if (object_ == nullptr)
+  {
     throw std::runtime_error("Could not create object.");
+  }
 }
 
 
@@ -148,14 +152,16 @@ raii_for_args<T, Args...>::type<Create, Free>::free_current()
   // TODO: Maybe I should not check if all free funcs are NoOp.
   // I could also make a wrapper like to_p_free(), so some are checked and some are not.
   if (object_ != nullptr)
+  {
     Free(&object_);
+  }
 }
 
 
 template<typename T, typename... Args>
 template<T *(*Create)(Args...), void (*Free)(T **)>
 void
-raii_for_args<T, Args...>::type<Create, Free>::reset(Args ...args)
+raii_for_args<T, Args...>::type<Create, Free>::reset(Args... args)
 {
   free_current();
   object_ = Create(args...);

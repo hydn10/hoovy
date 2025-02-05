@@ -10,7 +10,7 @@ add_library(${target}
 )
 
 target_include_directories(${target} PUBLIC include)
-target_compile_features (${target} PUBLIC cxx_std_17)
+target_compile_features (${target} PUBLIC cxx_std_20)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBAV REQUIRED IMPORTED_TARGET

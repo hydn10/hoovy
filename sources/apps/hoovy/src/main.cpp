@@ -3,6 +3,9 @@
 #include <puppeteer.hpp>
 
 #include <iostream>
+#include <print>
+#include <ranges>
+
 
 uint8_t
 to_pixel_value(double x)
@@ -15,7 +18,9 @@ to_pixel_value(double x)
   // Another option is scaling by (NUM_COLORS - .000001), but I feel it is more correct this way.
   // The branch predictor should almost always take the other path anyway.
   if (scaled >= NUM_COLORS) [[unlikely]]
+  {
     scaled = NUM_COLORS - 1;
+  }
 
   return static_cast<uint8_t>(scaled);
 };
@@ -27,66 +32,55 @@ try
 {
   if (argc < 2)
   {
-    printf(
-        "usage: %s output_file\n"
-        "API example program to output a media file with libavformat.\n"
-        "This program generates a synthetic audio and video stream, encodes and\n"
-        "muxes them into a file named output_file.\n"
-        "The output format is automatically guessed according to the file extension.\n"
-        "Raw images can also be output by using '%%d' in the filename.\n"
-        "\n",
-        argv[0]);
+    std::println("Usage: {} <output_file>", argv[0]);
     return 1;
   }
 
-  uint32_t constexpr W = 720;
-  uint32_t constexpr H = 576;
-  uint32_t constexpr FPS = 60;
-  double constexpr DURATION = 5;
+  uint_fast16_t constexpr W = 1280;
+  uint_fast16_t constexpr H = 720;
+  uint_fast16_t constexpr FPS = 24;
+  double constexpr DURATION = 8;
 
-  auto writer = hff::writer(argv[1], W, H, FPS, 8000000, 12, hff::pixel_format::YUV444P);
+  auto writer = hff::writer(argv[1], W, H, FPS, 8'000'000, 12, hff::pixel_format::YUV444P);
 
   writer.write_header();
 
-  auto constexpr STEPS = static_cast<uint64_t>(FPS * DURATION);
+  auto constexpr STEPS = static_cast<uint_fast64_t>(FPS * DURATION);
+  decltype(STEPS) constexpr ZERO = 0;
 
-  for (uint64_t i = 0; i < STEPS; ++i)
+  for (auto i : std::views::iota(ZERO, STEPS))
   {
     double step = static_cast<double>(i);
     auto image = hoovy::get_image(W, H, step / STEPS);
 
-    std::cout << i + 1 << " / " << STEPS << std::endl;
+    std::println("{} / {}", i + 1, STEPS);
 
-    writer.write_next_frame(
-        [&image](auto &rgbplane, auto width, auto height, auto time_index)
-        {
-          auto red = rgbplane.red();
-          auto green = rgbplane.green();
-          auto blue = rgbplane.blue();
+    writer.write_next_frame([&image](auto &rgbplane, int width, int height, uint64_t time_index)
+    {
+      auto red = rgbplane.red();
+      auto green = rgbplane.green();
+      auto blue = rgbplane.blue();
 
-          for (int y = 0; y < height; ++y)
-          {
-            auto r_col = red[y];
-            auto g_col = green[y];
-            auto b_col = blue[y];
+      for (auto [x, y] : std::views::cartesian_product(std::views::iota(0, width), std::views::iota(0, height)))
+      {
+        auto r_col = red[y];
+        auto g_col = green[y];
+        auto b_col = blue[y];
 
-            for (int x = 0; x < width; ++x)
-            {
-              auto pixel = image.pixels()[y * width + x].to_srgb();
-              (void)time_index;
+        auto pixel = image.pixels()[y * width + x].to_srgb();
+        (void)time_index;
 
-              r_col[x] = to_pixel_value(pixel.r());
-              g_col[x] = to_pixel_value(pixel.g());
-              b_col[x] = to_pixel_value(pixel.b());
-            }
-          }
-        });
+        r_col[x] = to_pixel_value(pixel.r());
+        g_col[x] = to_pixel_value(pixel.g());
+        b_col[x] = to_pixel_value(pixel.b());
+      }
+    });
   }
 
   writer.write_trailer();
 }
 catch (std::runtime_error const &e)
 {
-  std::cout << "MYERROR: " << e.what() << std::endl;
+  std::println(std::cerr, "MYERROR: {}", e.what());
   return -1;
 }

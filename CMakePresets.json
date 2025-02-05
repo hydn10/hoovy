@@ -1,14 +1,36 @@
 ﻿{
-  "version": 3,
+  "version": 4,
   "configurePresets": [
     {
-      "name": "windows-base",
+      "name": "build-tests",
+      "hidden": true,
+      "cacheVariables": {
+        "HOOVY_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "windows-cl-base",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "windows-clang-base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang-cl.exe"
       },
       "condition": {
         "type": "equals",
@@ -29,20 +51,151 @@
       }
     },
     {
-      "name": "x64-windows-release",
-      "displayName": "x64 Release",
-      "inherits": "windows-base",
+      "name": "vcpkg",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "x64",
+      "hidden": true,
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "release",
+      "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "x64-linux-release",
-      "displayName": "x64 Linux",
-      "inherits": "linux-base",
+      "name": "profile",
+      "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       }
+    },
+    {
+      "name": "dev-x64-win-debug",
+      "displayName": "x64 Debug (cl)",
+      "inherits": [
+        "x64",
+        "windows-cl-base",
+        "debug",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-win-release",
+      "displayName": "x64 Release (cl)",
+      "inherits": [
+        "x64",
+        "windows-cl-base",
+        "release",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-win-profile",
+      "displayName": "x64 Profile (cl)",
+      "inherits": [
+        "x64",
+        "windows-cl-base",
+        "profile",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-win-clang-debug",
+      "displayName": "x64 Debug (clang)",
+      "inherits": [
+        "x64",
+        "windows-clang-base",
+        "debug",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-win-clang-release",
+      "displayName": "x64 Release (clang)",
+      "inherits": [
+        "x64",
+        "windows-clang-base",
+        "release",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-lin-debug",
+      "displayName": "x64 Debug",
+      "inherits": [
+        "x64",
+        "linux-base",
+        "debug",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-lin-release",
+      "displayName": "x64 Release",
+      "inherits": [
+        "x64",
+        "linux-base",
+        "release",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "dev-x64-lin-profile",
+      "displayName": "x64 Profile",
+      "inherits": [
+        "x64",
+        "linux-base",
+        "profile",
+        "build-tests",
+        "vcpkg"
+      ]
+    },
+    {
+      "name": "ghci-ubuntu",
+      "inherits": [
+        "x64",
+        "linux-base",
+        "release",
+        "build-tests",
+        "vcpkg"
+      ],
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++-14"
+      }
+    },
+    {
+      "name": "ghci-windows",
+      "inherits": [
+        "x64",
+        "windows-cl-base",
+        "release",
+        "build-tests",
+        "vcpkg"
+      ]
     }
   ]
 }
