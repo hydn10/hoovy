@@ -6,4 +6,11 @@ string(JSON VERSION_FROM_JSON GET ${VCPKG_JSON_STRING} version)
 
 project(${PROJ_NAME_FROM_JSON} LANGUAGES CXX VERSION ${VERSION_FROM_JSON})
 
-add_subdirectory(sources)
+if(MSVC)
+  add_compile_options(/W4)
+else()
+  add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+
+add_subdirectory(lib)
+add_subdirectory(apps)

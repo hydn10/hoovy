@@ -6,10 +6,10 @@
       "name": "ffmpeg",
       "default-features": false,
       "features": [
+        "aom",
         "avcodec",
         "avformat",
-        "swscale",
-        "aom"
+        "swscale"
       ]
     },
     "htracer"
