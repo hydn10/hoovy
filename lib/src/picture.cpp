@@ -1,5 +1,7 @@
 #include <hff/picture.hpp>
 
+#include <hff/detail_/av/avutil.hpp>
+
 #include <stdexcept>
 
 
@@ -12,9 +14,11 @@ picture::picture(int width, int height, AVPixelFormat pixel_format)
   av_frame_.get().height = height;
   av_frame_.get().format = pixel_format;
 
-  int ret = av_frame_get_buffer(&av_frame_.get(), 0);
+  int const ret = av_frame_get_buffer(&av_frame_.get(), 0);
   if (ret < 0)
+  {
     throw std::runtime_error("Could not allocate frame data.");
+  }
 }
 
 

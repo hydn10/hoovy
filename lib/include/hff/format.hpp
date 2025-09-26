@@ -6,7 +6,7 @@
 #include <hff/pixel_format.hpp>
 #include <hff/stream_info.hpp>
 
-#include <string_view>
+#include <string>
 
 
 namespace hff
@@ -17,7 +17,7 @@ class format
   detail_::raii::av_format_context_for_output format_context_;
 
 public:
-  format(std::string_view filename);
+  format(std::string const &filename);
 
   stream_info
   create_video_stream(

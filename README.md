@@ -1,7 +1,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 
-# Hoovy
+# hoovy
 
 A modern C++23 video generation library that bridges the gap between raytraced image sequences and video encoding.
 Hoovy provides a simple, efficient interface to create high-quality videos from programmatically generated images using FFmpeg, with a focus on performance and ease of use.
@@ -98,7 +98,7 @@ Running the code produces an mp4 video in `out.mp4`.
 ## Dependencies
 - **FFmpeg** for video encoding.
 - **[htracer](https://github.com/hydn10/htracer)** for generating raytraced images.
-- C++23-compatible compiler (GCC 13+, Clang 16+).
+- C++23-compatible compiler (GCC 14+, Clang 16+, MSVC 19.38+).
 
 
 

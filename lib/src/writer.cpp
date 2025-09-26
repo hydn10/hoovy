@@ -1,7 +1,15 @@
 #include <hff/writer.hpp>
 
+#include <hff/detail_/av/avcodec.hpp>
+#include <hff/detail_/av/avformat.hpp>
+#include <hff/detail_/av/avutil.hpp>
 #include <hff/detail_/averror.hpp>
+#include <hff/detail_/raii/raii_for_args.hpp>
+#include <hff/pixel_format.hpp>
+#include <hff/stream_info.hpp>
 
+#include <cerrno>
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 
@@ -12,14 +20,12 @@ namespace hff
 bool
 writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame const *frame)
 {
-  using namespace std::string_literals;
-
   auto &cc = sti.get_codec_context();
 
   int ret = avcodec_send_frame(&cc, frame);
   if (ret < 0)
   {
-    throw std::runtime_error("Error sending a frame to the encoder: "s + av_err2str(ret));
+    throw std::runtime_error(std::string("Error sending a frame to the encoder: ") + av_err2str(ret));
   }
 
   auto &pkt = sti.get_packet();
@@ -34,10 +40,10 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
 
     else if (ret < 0)
     {
-      throw std::runtime_error("Error encoding a frame: "s + av_err2str(ret));
+      throw std::runtime_error(std::string("Error encoding a frame: ") + av_err2str(ret));
     }
 
-    auto st = sti.get_stream();
+    auto &st = sti.get_stream();
 
     // Rescale output packet timestamp values from codec to stream timebase
     av_packet_rescale_ts(&pkt, cc.time_base, st.time_base);
@@ -49,7 +55,7 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
     // This would be different if one used av_write_frame().
     if (ret < 0)
     {
-      throw std::runtime_error("Error while writing output packet: "s + av_err2str(ret));
+      throw std::runtime_error(std::string("Error while writing output packet: ") + av_err2str(ret));
     }
   }
 
@@ -58,7 +64,7 @@ writer::write_video_frame(AVFormatContext &oc, hff::stream_info &sti, AVFrame co
 
 
 writer::writer(
-    std::string_view filename,
+    std::string const &filename,
     uint16_t width,
     uint16_t height,
     uint16_t frame_rate,
@@ -85,7 +91,7 @@ writer::writer(
 void
 writer::write_header()
 {
-  int ret = avformat_write_header(&format_.oc(), nullptr);
+  int const ret = avformat_write_header(&format_.oc(), nullptr);
   if (ret < 0)
   {
     throw std::runtime_error("Error occurred when writing header.");
@@ -101,7 +107,7 @@ writer::write_trailer()
   {
   }
 
-  int ret = av_write_trailer(&format_.oc());
+  int const ret = av_write_trailer(&format_.oc());
   if (ret < 0)
   {
     throw std::runtime_error("Error ocurred when writing trailer.");

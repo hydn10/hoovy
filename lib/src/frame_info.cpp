@@ -1,12 +1,7 @@
 #include <hff/frame_info.hpp>
 
-extern "C"
-{
-#include <libavformat/avformat.h>
-#include <libswscale/swscale.h>
-}
-
-#include <stdexcept>
+#include <hff/detail_/av/avutil.hpp>
+#include <hff/detail_/av/swscale.hpp>
 
 
 namespace hff

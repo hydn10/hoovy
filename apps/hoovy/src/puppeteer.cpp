@@ -2,6 +2,8 @@
 
 #include <htracer/htracer.hpp>
 
+#include <cmath>
+#include <cstdint>
 #include <numbers>
 
 
@@ -36,8 +38,8 @@ get_image(uint32_t width, uint32_t height, double lam)
 
   htracer::staging::scene_with<double, sphere_t, plane_t> scene;
 
-  scene.add_light({{-3., 6., 0.}, {1., 1., 1.}, 20});
-  scene.add_light({{3., 6., 0.}, {1., 1., 1.}, 10});
+  scene.add_light({.position = {-3., 6., 0.}, .color = {1., 1., 1.}, .intensity = 20});
+  scene.add_light({.position = {3., 6., 0.}, .color = {1., 1., 1.}, .intensity = 10});
 
   auto const floor_material = htracer::staging::make_solid<double>({0.2, 0.2, 0.2}, 0.125, 0, 200, .2);
   auto const mirror_material = htracer::staging::make_mirror<double>(0, 200, 0.92);

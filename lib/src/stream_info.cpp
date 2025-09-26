@@ -1,6 +1,13 @@
 #include <hff/stream_info.hpp>
 
+#include <hff/detail_/av/avcodec.hpp>
+#include <hff/detail_/av/avformat.hpp>
+#include <hff/detail_/av/avutil.hpp>
+#include <hff/detail_/raii/objects.hpp>
+#include <hff/frame_info.hpp>
+
 #include <stdexcept>
+#include <utility>
 
 
 namespace hff
@@ -32,7 +39,7 @@ stream_info::create_frames()
   }
 
   // Allocate the frames.
-  return frame_info(codec_context_.get().width, codec_context_.get().height, codec_context_.get().pix_fmt);
+  return {codec_context_.get().width, codec_context_.get().height, codec_context_.get().pix_fmt};
 }
 
 

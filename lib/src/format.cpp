@@ -1,20 +1,24 @@
 #include <hff/format.hpp>
 
-extern "C"
-{
-#include <libavformat/avformat.h>
-#include <libavutil/opt.h>
-}
+#include <hff/detail_/av/avcodec.hpp>
+#include <hff/detail_/av/avformat.hpp>
+#include <hff/detail_/av/avutil.hpp>
+#include <hff/detail_/raii/objects.hpp>
+#include <hff/pixel_format.hpp>
+#include <hff/stream_info.hpp>
 
-#include <stdexcept>
+#include <cstdint>
 #include <format>
+#include <stdexcept>
+#include <string>
 #include <thread>
+#include <utility>
 
 
 namespace hff
 {
 
-format::format(std::string_view filename)
+format::format(std::string const &filename)
     : format_context_(nullptr, nullptr, filename.data())
 {
 }
@@ -40,7 +44,7 @@ format::create_video_stream(
 
   auto &stream = *stream_ptr;
 
-  stream.id = format_context_.get().nb_streams - 1;
+  stream.id = static_cast<int>(format_context_.get().nb_streams - 1);
 
   AVCodec const *codec = avcodec_find_encoder(codec_id);
   if (codec == nullptr)
@@ -64,11 +68,13 @@ format::create_video_stream(
   cc.pix_fmt = static_cast<AVPixelFormat>(pixel_format);
 
   av_opt_set(cc.priv_data, "cpu-used", "4", 0);
-  cc.thread_count = std::thread::hardware_concurrency();
+  cc.thread_count = static_cast<int>(std::thread::hardware_concurrency());
 
   // Some formats want stream headers to be separate.
-  if (format_context_.get().oformat->flags & AVFMT_GLOBALHEADER)
+  // NOLINTNEXTLINE(hicpp-signed-bitwise)
+  if (static_cast<bool>(format_context_.get().oformat->flags & AVFMT_GLOBALHEADER))
   {
+    // NOLINTNEXTLINE(hicpp-signed-bitwise)
     cc.flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
   }
 
@@ -93,7 +99,8 @@ format::oc() const
 bool
 format::should_open_file() const
 {
-  return !(format_context_.get().oformat->flags & AVFMT_NOFILE);
+  // NOLINTNEXTLINE(hicpp-signed-bitwise)
+  return !static_cast<bool>(format_context_.get().oformat->flags & AVFMT_NOFILE);
 }
 
 } // namespace hff

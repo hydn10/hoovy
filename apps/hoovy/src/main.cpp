@@ -1,11 +1,20 @@
-﻿#include <hff/writer.hpp>
+﻿#include <puppeteer.hpp>
 
-#include <puppeteer.hpp>
+#include <hff/pixel_format.hpp>
+#include <hff/writer.hpp>
 
+#include <cstddef>
+#include <cstdint>
 #include <iostream>
+#include <ostream>
 #include <print>
 #include <ranges>
+#include <span>
+#include <stdexcept>
 
+
+namespace
+{
 
 uint8_t
 to_pixel_value(double x)
@@ -25,62 +34,73 @@ to_pixel_value(double x)
   return static_cast<uint8_t>(scaled);
 };
 
+} // namespace
+
 
 int
 main(int argc, char **argv)
 try
 {
+  std::span<char const *const> const args{argv, static_cast<std::size_t>(argc)};
+
   if (argc < 2)
   {
-    std::println("Usage: {} <output_file>", argv[0]);
+    std::println("Usage: {} <output_file>", args[0]);
     return 1;
   }
 
-  uint_fast16_t constexpr W = 1280;
-  uint_fast16_t constexpr H = 720;
-  uint_fast16_t constexpr FPS = 24;
-  double constexpr DURATION = 8;
-
-  auto writer = hff::writer(argv[1], W, H, FPS, 8'000'000, 12, hff::pixel_format::YUV444P);
-
-  writer.write_header();
-
-  auto constexpr STEPS = static_cast<uint_fast64_t>(FPS * DURATION);
-  decltype(STEPS) constexpr ZERO = 0;
-
-  for (auto i : std::views::iota(ZERO, STEPS))
+  try
   {
-    double step = static_cast<double>(i);
-    auto image = hoovy::get_image(W, H, step / STEPS);
+    constexpr uint_fast16_t W = 1280;
+    constexpr uint_fast16_t H = 720;
+    constexpr uint_fast16_t FPS = 24;
+    constexpr double DURATION = 8;
 
-    std::println("{} / {}", i + 1, STEPS);
+    auto writer = hff::writer(args[1], W, H, FPS, 8'000'000, 12, hff::pixel_format::YUV444P);
 
-    writer.write_next_frame([&image](auto &rgbplane, int width, int height, uint64_t time_index)
+    writer.write_header();
+
+    constexpr auto STEPS = static_cast<uint_fast64_t>(FPS * DURATION);
+    decltype(STEPS) constexpr ZERO = 0;
+
+    for (auto idx : std::views::iota(ZERO, STEPS))
     {
-      auto red = rgbplane.red();
-      auto green = rgbplane.green();
-      auto blue = rgbplane.blue();
+      auto step = static_cast<double>(idx);
+      auto image = hoovy::get_image(W, H, step / STEPS);
 
-      for (auto [x, y] : std::views::cartesian_product(std::views::iota(0, width), std::views::iota(0, height)))
+      std::println("Frames: {} / {}", idx + 1, STEPS);
+
+      writer.write_next_frame([&image](auto &rgbplane, int width, int height, uint64_t)
       {
-        auto r_col = red[y];
-        auto g_col = green[y];
-        auto b_col = blue[y];
+        auto red = rgbplane.red();
+        auto green = rgbplane.green();
+        auto blue = rgbplane.blue();
 
-        auto pixel = image.pixels()[y * width + x].to_srgb();
-        (void)time_index;
+        for (auto const &[x, y] :
+             std::views::cartesian_product(std::views::iota(0, width), std::views::iota(0, height)))
+        {
+          auto r_col = red[y];
+          auto g_col = green[y];
+          auto b_col = blue[y];
 
-        r_col[x] = to_pixel_value(pixel.r());
-        g_col[x] = to_pixel_value(pixel.g());
-        b_col[x] = to_pixel_value(pixel.b());
-      }
-    });
+          auto pixel = image.pixels()[y * width + x].to_srgb();
+
+          r_col[x] = to_pixel_value(pixel.r());
+          g_col[x] = to_pixel_value(pixel.g());
+          b_col[x] = to_pixel_value(pixel.b());
+        }
+      });
+    }
+
+    writer.write_trailer();
   }
-
-  writer.write_trailer();
+  catch (std::runtime_error const &e)
+  {
+    std::println(std::cerr, "RUNTIME_ERROR: {}", e.what());
+    return 2;
+  }
 }
-catch (std::runtime_error const &e)
+catch (...)
 {
-  std::println(std::cerr, "MYERROR: {}", e.what());
   return -1;
 }

@@ -1,17 +1,17 @@
 {
   "default-registry": {
     "kind": "git",
-    "baseline": "0ca64b4e1c70fa6d9f53b369b8f3f0843797c20c",
+    "baseline": "e6e4bc74aaf5c63dfc358810594f662f7e9bc4d4",
     "repository": "https://github.com/microsoft/vcpkg"
   },
   "registries": [
     {
       "kind": "git",
+      "baseline": "bd14c96f7a36d8c65e0f750143ecc56f72edf0f2",
       "repository": "https://github.com/hydn10/vcpkg-registry",
       "packages": [
         "htracer"
-      ],
-      "baseline": "0886d14a2a903579ff42bbaadcd7471f299d3eec"
+      ]
     }
   ]
 }

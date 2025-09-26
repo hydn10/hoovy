@@ -35,7 +35,9 @@ frame_info::produce_frame(FrameWriter &&frame_writer)
 {
   int ret = av_frame_make_writable(&frame_.get());
   if (ret < 0)
+  {
     throw std::runtime_error("Could not make frame writable.");
+  }
 
   auto &f = frame_.get();
   auto &tf = tmp_frame_.get();

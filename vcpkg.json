@@ -11,7 +11,14 @@
         "avformat",
         "swscale"
       ]
-    },
-    "htracer"
-  ]
+    }
+  ],
+  "features": {
+    "hoovy-app": {
+      "description": "Build the hoovy app",
+      "dependencies": [
+        "htracer"
+      ]
+    }
+  }
 }

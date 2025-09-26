@@ -1,11 +1,18 @@
 ﻿{
-  "version": 4,
+  "version": 6,
   "configurePresets": [
     {
       "name": "build-tests",
       "hidden": true,
       "cacheVariables": {
         "HOOVY_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "build-app",
+      "hidden": true,
+      "cacheVariables": {
+        "HOOVY_BUILD_APP": "ON"
       }
     },
     {
@@ -51,10 +58,41 @@
       }
     },
     {
+      "name": "msvc-warnings",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_INIT": "/W4 /permissive-",
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"
+      }
+    },
+    {
+      "name": "gccclang-warnings",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_INIT": "-Wall -Wextra -pedantic",
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON"
+      }
+    },
+    {
+      "name": "enable-clang-tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--warnings-as-errors=*;--extra-arg=/EHsc",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
       "name": "vcpkg",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "vcpkg-features-all",
+      "hidden": true,
+      "cacheVariables": {
+        "VCPKG_MANIFEST_FEATURES": "hoovy-app"
       }
     },
     {
@@ -88,57 +126,77 @@
     },
     {
       "name": "dev-x64-win-debug",
-      "displayName": "x64 Debug (cl)",
+      "displayName": "x64 Debug (msvc)",
       "inherits": [
         "x64",
         "windows-cl-base",
         "debug",
+        "msvc-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
       "name": "dev-x64-win-release",
-      "displayName": "x64 Release (cl)",
+      "displayName": "x64 Release (msvc)",
       "inherits": [
         "x64",
         "windows-cl-base",
         "release",
+        "msvc-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
       "name": "dev-x64-win-profile",
-      "displayName": "x64 Profile (cl)",
+      "displayName": "x64 Profile (msvc)",
       "inherits": [
         "x64",
         "windows-cl-base",
         "profile",
+        "msvc-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
       "name": "dev-x64-win-clang-debug",
-      "displayName": "x64 Debug (clang)",
+      "displayName": "x64 Debug (clang-cl)",
       "inherits": [
         "x64",
         "windows-clang-base",
         "debug",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
       "name": "dev-x64-win-clang-release",
-      "displayName": "x64 Release (clang)",
+      "displayName": "x64 Release (clang-cl)",
       "inherits": [
         "x64",
         "windows-clang-base",
         "release",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
@@ -148,8 +206,12 @@
         "x64",
         "linux-base",
         "debug",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
@@ -159,8 +221,12 @@
         "x64",
         "linux-base",
         "release",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
@@ -170,8 +236,12 @@
         "x64",
         "linux-base",
         "profile",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     },
     {
@@ -180,8 +250,12 @@
         "x64",
         "linux-base",
         "release",
+        "gccclang-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ],
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "g++-14"
@@ -193,8 +267,12 @@
         "x64",
         "windows-cl-base",
         "release",
+        "msvc-warnings",
+        "enable-clang-tidy",
+        "vcpkg",
+        "vcpkg-features-all",
         "build-tests",
-        "vcpkg"
+        "build-app"
       ]
     }
   ]

@@ -8,7 +8,7 @@
 #include <hff/stream_info.hpp>
 
 #include <cstdint>
-#include <string_view>
+#include <string>
 
 
 namespace hff
@@ -29,7 +29,7 @@ class writer
 
 public:
   writer(
-      std::string_view filename,
+      std::string const &filename,
       uint16_t width,
       uint16_t height,
       uint16_t frame_rate,

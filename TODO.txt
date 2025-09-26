@@ -1,0 +1,10 @@
+- Create code tests.
+
+- Set up CI.
+
+- Create infrastructure tests to run in CI.
+    * The matrix should include STATIC and SHARED libs.
+    * Also include wether build is unitary or not via CMAKE_UNITY_BUILD.
+    * Run the verify-headers targets as part of testing.
+    * Test different C++ standards.
+    * Check formatting (both C++ and CMake).
