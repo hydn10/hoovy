@@ -61,9 +61,8 @@ try
     writer.write_header();
 
     constexpr auto STEPS = static_cast<uint_fast64_t>(FPS * DURATION);
-    decltype(STEPS) constexpr ZERO = 0;
 
-    for (auto idx : std::views::iota(ZERO, STEPS))
+    for (auto idx : std::views::iota(decltype(STEPS){0}, STEPS))
     {
       auto step = static_cast<double>(idx);
       auto image = hoovy::get_image(W, H, step / STEPS);

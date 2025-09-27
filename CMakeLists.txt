@@ -16,6 +16,11 @@ option(
     "Build the hoovy app. Default: ${PROJECT_IS_TOP_LEVEL}."
     ${PROJECT_IS_TOP_LEVEL})
 
+option(
+    HOOVY_BUILD_EXAMPLES
+    "Build the hoovy examples. Default: ${PROJECT_IS_TOP_LEVEL}."
+    ${PROJECT_IS_TOP_LEVEL})
+
 enable_testing()
 
 
@@ -23,6 +28,10 @@ add_subdirectory(lib)
 
 if(HOOVY_BUILD_APP)
     add_subdirectory(apps)
+endif()
+
+if(HOOVY_BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif()
 
 

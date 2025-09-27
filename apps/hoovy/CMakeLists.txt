@@ -45,3 +45,5 @@ if (WIN32)
             POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
     )
 endif()
+
+message(STATUS "Added app: ${target_name}")

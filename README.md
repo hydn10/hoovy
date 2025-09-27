@@ -12,9 +12,9 @@ Hoovy provides a simple, efficient interface to create high-quality videos from 
 
 - **Modern C++ Design**: Leverages C++23 features for clean, efficient code.
 - **FFmpeg Integration**: Direct access to FFmpeg's powerful encoding capabilities.
-- **Raytracing Integration**: Works directly with [htracer](https://github.com/hydn10/htracer) for raytracing.
 - **Type Safe**: Strong typing and compile-time checks.
-- **AV1 Encoding**: Leverage the modern AV1 ecoder using libaom.
+- **AV1 Encoding**: Leverage the modern AV1 encoder using libaom.
+- **Optional Raytracing Integration**: hoovy-app pairs with [htracer](https://github.com/hydn10/htracer) for raytraced imagery.
 
 
 
@@ -97,8 +97,8 @@ Running the code produces an mp4 video in `out.mp4`.
 
 ## Dependencies
 - **FFmpeg** for video encoding.
-- **[htracer](https://github.com/hydn10/htracer)** for generating raytraced images.
 - C++23-compatible compiler (GCC 14+, Clang 16+, MSVC 19.38+).
+- *Optional*: **[htracer](https://github.com/hydn10/htracer)** when building or running hoovy-app.
 
 
 
@@ -116,7 +116,7 @@ nix build
 ### Using Vcpkg
 
 1.  Clone the repository and navigate to its root directory.
-2.  Install [vcpkg](https://vcpkg.io/en/) if you don't have it already.
+2.  Install [vcpkg](https://vcpkg.io/) if you don't have it already.
 3.  Make sure `VCPKG_ROOT` points to the vcpkg install folder or set `CMAKE_TOOLCHAIN_FILE` to point to `<VCPKG_ROOT>/scripts/buildsystems/vcpkg.cmake"`.
 4.  Configure, build and install using CMake:
     

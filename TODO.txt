@@ -8,3 +8,4 @@
     * Run the verify-headers targets as part of testing.
     * Test different C++ standards.
     * Check formatting (both C++ and CMake).
+    * Make sure to build all the examples in the different configurations.
